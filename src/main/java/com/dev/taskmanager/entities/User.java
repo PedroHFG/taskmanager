@@ -2,6 +2,8 @@ package com.dev.taskmanager.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +17,10 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+
+    /* Associação um para muitos com Task */
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<>();
 
     public User() {
 
@@ -57,6 +63,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     @Override

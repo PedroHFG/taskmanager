@@ -17,16 +17,22 @@ public class Task {
     private TaskStatus status;
     private LocalDate dueDate;
 
+    /* Ligação muitos para um com usuário */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Task() {
 
     }
 
-    public Task(Long id, String title, String description, TaskStatus status, LocalDate dueDate) {
+    public Task(Long id, String title, String description, TaskStatus status, LocalDate dueDate, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.dueDate = dueDate;
+        this.user = user;
     }
 
     public Long getId() {
@@ -67,6 +73,14 @@ public class Task {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
