@@ -1,6 +1,10 @@
 package com.dev.taskmanager.dto;
 
 import com.dev.taskmanager.entities.User;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDTO {
 
@@ -8,6 +12,8 @@ public class UserDTO {
     private String name;
     private String email;
     private String password;
+
+    private List<String> roles = new ArrayList<>();
 
     public UserDTO() {
 
@@ -25,6 +31,9 @@ public class UserDTO {
         this.name = entity.getName();
         this.email = entity.getEmail();
         this.password = entity.getPassword();
+        for (GrantedAuthority role : entity.getRoles()) {
+            roles.add(role.getAuthority());
+        }
     }
 
     public Long getId() {
@@ -57,5 +66,9 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 }
