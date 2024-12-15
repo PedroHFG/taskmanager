@@ -1,10 +1,6 @@
 package com.dev.taskmanager.dto;
 
-import com.dev.taskmanager.entities.Role;
 import com.dev.taskmanager.entities.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDTO {
 
