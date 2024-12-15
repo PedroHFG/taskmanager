@@ -2,9 +2,7 @@ package com.dev.taskmanager.entities;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_user")
@@ -21,6 +19,13 @@ public class User {
     /* Associação um para muitos com Task */
     @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();
+
+    /* Associação muitos para muitos com Role */
+    @ManyToMany
+    @JoinTable(name = "tb_user_role",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
 
@@ -67,6 +72,23 @@ public class User {
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getAuthority().equals(roleName)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
