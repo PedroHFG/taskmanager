@@ -31,6 +31,8 @@ public class TaskService {
         Task entity = new Task();
         copyDtoToEntity(dto, entity);
 
+        entity.setStatus(TaskStatus.PENDING);
+
         User user = userService.authenticated();
         entity.setUser(user);
 
@@ -38,10 +40,18 @@ public class TaskService {
         return new TaskDTO(entity);
     }
 
+    @Transactional
+    public TaskDTO update(Long id, TaskDTO dto) {
+        Task entity = taskRepository.getReferenceById(id);
+        copyDtoToEntity(dto, entity);
+        entity = taskRepository.save(entity);
+        return new TaskDTO(entity);
+    }
+
     private void copyDtoToEntity(TaskDTO dto, Task entity) {
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
-        entity.setStatus(TaskStatus.PENDING);
+        entity.setStatus(dto.getStatus());
         entity.setDueDate(dto.getDueDate());
     }
 }
