@@ -8,6 +8,7 @@ import com.dev.taskmanager.repositories.TaskRepository;
 import com.dev.taskmanager.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -46,6 +47,11 @@ public class TaskService {
         copyDtoToEntity(dto, entity);
         entity = taskRepository.save(entity);
         return new TaskDTO(entity);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        taskRepository.deleteById(id);
     }
 
     private void copyDtoToEntity(TaskDTO dto, Task entity) {
