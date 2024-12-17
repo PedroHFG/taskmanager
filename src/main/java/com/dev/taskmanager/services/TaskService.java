@@ -5,8 +5,11 @@ import com.dev.taskmanager.entities.Task;
 import com.dev.taskmanager.entities.TaskStatus;
 import com.dev.taskmanager.entities.User;
 import com.dev.taskmanager.repositories.TaskRepository;
+import com.dev.taskmanager.services.exceptions.DatabaseException;
 import com.dev.taskmanager.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,15 +50,29 @@ public class TaskService {
 
     @Transactional
     public TaskDTO update(Long id, TaskDTO dto) {
-        Task entity = taskRepository.getReferenceById(id);
-        copyDtoToEntity(dto, entity);
-        entity = taskRepository.save(entity);
-        return new TaskDTO(entity);
+        try {
+            Task entity = taskRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = taskRepository.save(entity);
+            return new TaskDTO(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado!");
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        taskRepository.deleteById(id);
+        if (!taskRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado!");
+        }
+        try {
+            taskRepository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
+
     }
 
     private void copyDtoToEntity(TaskDTO dto, Task entity) {
