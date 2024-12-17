@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/tasks")
@@ -17,9 +18,17 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<TaskDTO> findById(@PathVariable Long id) {
         TaskDTO dto = taskService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping
+    public ResponseEntity<List<TaskDTO>> findAll() {
+        List<TaskDTO> dto = taskService.findAll();
         return ResponseEntity.ok(dto);
     }
 

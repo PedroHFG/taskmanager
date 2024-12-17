@@ -37,6 +37,13 @@ public class TaskService {
         return new TaskDTO(task);
     }
 
+    @Transactional(readOnly = true)
+    public List<TaskDTO> findAll() {
+        User me = userService.authenticated();
+        List<Task> result = taskRepository.findByUserId(me.getId());
+        return result.stream().map(x -> new TaskDTO(x)).toList();
+    }
+
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
