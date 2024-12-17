@@ -6,6 +6,7 @@ import com.dev.taskmanager.entities.User;
 import com.dev.taskmanager.projections.UserDetailsProjection;
 import com.dev.taskmanager.repositories.RoleRepository;
 import com.dev.taskmanager.repositories.UserRepository;
+import com.dev.taskmanager.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +31,14 @@ public class UserService implements UserDetailsService {
     private RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Transactional(readOnly = true)
+    public UserDTO findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado"));
+        return new UserDTO(user);
+    }
+
 
     @Transactional
     public UserDTO insert(UserDTO dto) {

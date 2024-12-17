@@ -4,6 +4,7 @@ import com.dev.taskmanager.dto.UserDTO;
 import com.dev.taskmanager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -15,6 +16,13 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        UserDTO dto = service.findById(id);
+        return ResponseEntity.ok(dto);
+    }
 
     @PostMapping
     public ResponseEntity<UserDTO> insert(@RequestBody UserDTO dto) {
