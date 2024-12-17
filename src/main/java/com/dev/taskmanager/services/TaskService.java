@@ -26,10 +26,14 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
     @Transactional(readOnly = true)
     public TaskDTO findById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado"));
+        authService.validateSelfOrAdmin(task.getUser().getId());
         return new TaskDTO(task);
     }
 
@@ -52,6 +56,7 @@ public class TaskService {
     public TaskDTO update(Long id, TaskDTO dto) {
         try {
             Task entity = taskRepository.getReferenceById(id);
+            authService.validateSelfOrAdmin(entity.getUser().getId());
             copyDtoToEntity(dto, entity);
             entity = taskRepository.save(entity);
             return new TaskDTO(entity);
@@ -63,9 +68,10 @@ public class TaskService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        if (!taskRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Recurso não encontrado!");
-        }
+        Task task = taskRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado"));
+        authService.validateSelfOrAdmin(task.getUser().getId());
+
         try {
             taskRepository.deleteById(id);
         }
