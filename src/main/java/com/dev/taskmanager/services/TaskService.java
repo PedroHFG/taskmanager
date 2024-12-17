@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TaskService {
 
@@ -26,6 +29,7 @@ public class TaskService {
                 () -> new ResourceNotFoundException("Recurso não encontrado"));
         return new TaskDTO(task);
     }
+
 
     @Transactional
     public TaskDTO insert(TaskDTO dto) {
