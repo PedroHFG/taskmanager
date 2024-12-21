@@ -1,6 +1,8 @@
 package com.dev.taskmanager.dto;
 
 import com.dev.taskmanager.entities.User;
+import com.dev.taskmanager.projections.UserDetailsProjection;
+import com.dev.taskmanager.projections.UserProjection;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
@@ -70,5 +72,9 @@ public class UserDTO {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public void addRole(String roleName) {
+        roles.add(roleName);
     }
 }

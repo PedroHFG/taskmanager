@@ -1,13 +1,17 @@
 package com.dev.taskmanager.services;
 
 import com.dev.taskmanager.dto.UserDTO;
+import com.dev.taskmanager.dto.UserMinDTO;
 import com.dev.taskmanager.entities.Role;
 import com.dev.taskmanager.entities.User;
 import com.dev.taskmanager.projections.UserDetailsProjection;
+import com.dev.taskmanager.projections.UserProjection;
 import com.dev.taskmanager.repositories.RoleRepository;
 import com.dev.taskmanager.repositories.UserRepository;
 import com.dev.taskmanager.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +23,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -37,6 +45,31 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado"));
         return new UserDTO(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> findAll() {
+        List<UserProjection> result = userRepository.searchUserAndRoles();
+
+        // Agrupando os resultados por ID do usuário
+        Map<Long, UserDTO> userMap = new HashMap<>();
+
+        for (UserProjection projection : result) {
+            Long userId = projection.getId();
+            // Se o usuário ainda não foi adicionado, cria um novo UserDTO
+            if (!userMap.containsKey(userId)) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(projection.getId());
+                userDTO.setEmail(projection.getEmail());
+                userDTO.setName(projection.getName());
+                userDTO.setPassword(projection.getPassword());
+
+                userMap.put(userId, userDTO);
+            }
+            // Adiciona a role ao UserDTO existente
+            userMap.get(userId).addRole(projection.getAuthority());
+        }
+        return new ArrayList<>(userMap.values());
     }
 
 
