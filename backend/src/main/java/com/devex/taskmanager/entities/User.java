@@ -3,6 +3,8 @@ package com.devex.taskmanager.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +23,9 @@ public class User {
 
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<>();
 
     public User() {
 
@@ -74,7 +79,15 @@ public class User {
 		return updatedAt;
 	}
 
-	@PrePersist
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    @PrePersist
 	public void prePersist() {
 		createdAt = Instant.now();
 	}
