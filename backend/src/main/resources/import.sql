@@ -1,9 +1,9 @@
 --Insert tb_user
-INSERT INTO tb_user (name, email, password, created_At) VALUES ('Alice Santos', 'alice@example.com', '123456', NOW());
-INSERT INTO tb_user (name, email, password, created_At) VALUES ('Bruno Oliveira', 'bruno@example.com', 'senha123', NOW());
-INSERT INTO tb_user (name, email, password, created_At) VALUES ('Carla Mendes', 'carla@example.com', 'abc123', NOW());
-INSERT INTO tb_user (name, email, password, created_At) VALUES ('Daniel Souza', 'daniel@example.com', 'pass2024', NOW());
-INSERT INTO tb_user (name, email, password, created_At) VALUES ('Fernanda Lima', 'fernanda@example.com', 'minhasenha', NOW());
+INSERT INTO tb_user (name, email, password, created_At) VALUES ('Alice Santos', 'alice@example.com', '$2a$10$CSoBmOaDrtnoL4jqTlsAYuKxuVnZErumgZPAes5xuL8zob9FK3fuu', NOW()); --123456
+INSERT INTO tb_user (name, email, password, created_At) VALUES ('Bruno Oliveira', 'bruno@example.com', '$2a$10$U/kOxMEzPD2QHvKicm.t6ucMRuoGAo7JgQeQ8CtvGHQqF6mpktN0S', NOW()); -- senha123
+INSERT INTO tb_user (name, email, password, created_At) VALUES ('Carla Mendes', 'carla@example.com', '$2a$10$UzvcB9v/GLKxzWCKvEiXOOcf7rI0Xn3JCUZtNB9u6P3zVeUdup176', NOW()); --abc123
+INSERT INTO tb_user (name, email, password, created_At) VALUES ('Daniel Souza', 'daniel@example.com', '$2a$10$HIlrI64vqSCD/iixQKZRsuEcgPc038.YwENiubMbcdnJMxNCmy./2', NOW()); --pass2024
+INSERT INTO tb_user (name, email, password, created_At) VALUES ('Fernanda Lima', 'fernanda@example.com', '$2a$10$nhNMTpqmLQdtb6V5OaHNs.twDZbF0JGeN2h1l2y5XMXAN1mqqZsE2', NOW()); --minhasenha
 
 -- Insert tb_role
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
