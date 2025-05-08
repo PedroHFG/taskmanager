@@ -3,6 +3,7 @@ package com.devex.taskmanager.dto;
 import com.devex.taskmanager.entities.Task;
 import com.devex.taskmanager.enums.Priority;
 import com.devex.taskmanager.enums.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,17 +13,23 @@ import java.time.LocalDate;
 public class TaskDTO {
 
     private Long id;
+
     @Size(min = 3, max = 80, message = "Nome precisa ter de 3 a 80 caracteres")
     @NotBlank(message = "Campo requerido")
     private String title;
+
     @Size(min = 10, message = "Descrição precisa ter no mímo 10 caracteres")
     @NotBlank(message = "Campo requerido")
     private String description;
+
     @NotBlank(message = "Campo requerido")
     private LocalDate deadline;
     private Priority priority;
     private TaskStatus status;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant updatedAt;
     private Long userId;
 
