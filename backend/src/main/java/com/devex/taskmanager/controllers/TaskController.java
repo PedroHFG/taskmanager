@@ -32,4 +32,11 @@ public class TaskController {
         dto = service.updateTask(id, dto);
         return ResponseEntity.ok(dto);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        service.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    }
 }

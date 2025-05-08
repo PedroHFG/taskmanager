@@ -4,10 +4,13 @@ import com.devex.taskmanager.dto.TaskDTO;
 import com.devex.taskmanager.entities.Task;
 import com.devex.taskmanager.entities.User;
 import com.devex.taskmanager.repositories.TaskRepository;
+import com.devex.taskmanager.services.exceptions.DatabaseException;
 import com.devex.taskmanager.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -45,6 +48,20 @@ public class TaskService {
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Tarefa não encontrada");
+        }
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteTask(Long id) {
+
+        Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
+        authService.validateSelfOrAdmin(task.getUser().getId());
+        
+        try {
+            taskRepository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Erro de integridade referencial");
         }
     }
 
