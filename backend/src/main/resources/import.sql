@@ -5,6 +5,17 @@ INSERT INTO tb_user (name, email, password, created_At) VALUES ('Carla Mendes', 
 INSERT INTO tb_user (name, email, password, created_At) VALUES ('Daniel Souza', 'daniel@example.com', 'pass2024', NOW());
 INSERT INTO tb_user (name, email, password, created_At) VALUES ('Fernanda Lima', 'fernanda@example.com', 'minhasenha', NOW());
 
+-- Insert tb_role
+INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
+INSERT INTO tb_role (authority) VALUES ('ROLE_USER');
+
+-- Insert tb_user_role
+INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (3, 2);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (4, 2);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (5, 2);
+
 
 -- Tarefas do usuário 1 (Alice Santos)
 INSERT INTO tb_task (title, description, deadline, priority, status, user_id, created_At) VALUES ('Comprar mantimentos', 'Ir ao mercado e comprar itens da lista.', '2025-05-10', 1, 0, 1, NOW());
@@ -22,5 +33,4 @@ INSERT INTO tb_task (title, description, deadline, priority, status, user_id, cr
 
 -- Tarefas do usuário 5 (Fernanda Lima)
 INSERT INTO tb_task (title, description, deadline, priority, status, user_id, created_At) VALUES ('Renovar domínio', 'Renovar o domínio do site por mais 1 ano.', '2025-05-11', 2, 3, 5, NOW());
-
 INSERT INTO tb_task (title, description, deadline, priority, status, user_id, created_At) VALUES ('Planejar campanha', 'Elaborar estratégia para campanha de marketing.', '2025-05-15', 3, 0, 5, NOW());
