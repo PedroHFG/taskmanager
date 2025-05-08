@@ -9,6 +9,8 @@ import com.devex.taskmanager.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,13 @@ public class TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
         authService.validateSelfOrAdmin(task.getUser().getId());
         return new TaskDTO(task);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TaskDTO> findAllTask(Pageable pageable) {
+        User me = userService.authenticated();
+        Page<Task> result = taskRepository.findByUserId(me.getId(), pageable);
+        return result.map(x -> new TaskDTO(x));
     }
 
     private void copyDtoToEntity(TaskDTO dto, Task task) {
