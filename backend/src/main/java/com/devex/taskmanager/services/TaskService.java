@@ -56,13 +56,20 @@ public class TaskService {
 
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
         authService.validateSelfOrAdmin(task.getUser().getId());
-        
+
         try {
             taskRepository.deleteById(id);
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Erro de integridade referencial");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public TaskDTO findTaskById(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
+        authService.validateSelfOrAdmin(task.getUser().getId());
+        return new TaskDTO(task);
     }
 
     private void copyDtoToEntity(TaskDTO dto, Task task) {
